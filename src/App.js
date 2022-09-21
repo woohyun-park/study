@@ -1,60 +1,35 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import Value from "./Value";
-import Button from "./Button";
+import Item from "./Item";
 
-const CounterValueContext = createContext();
-const CounterActionContext = createContext();
+const ItemGroupContext = createContext();
 
-function CounterProvider({ children }) {
-  const [counter, setCounter] = useState(1);
-  const actions = useMemo(
-    () => ({
-      increase() {
-        setCounter((prev) => prev + 1);
-      },
-      decrease() {
-        setCounter((prev) => prev - 1);
-      },
-    }),
-    []
-  );
+function ItemGroup({ children, currentId, onSelect }) {
+  const value = useMemo(() => ({ currentId, onSelect }), [currentId, onSelect]);
   return (
-    <CounterActionContext.Provider value={actions}>
-      <CounterValueContext.Provider value={counter}>
-        {children}
-      </CounterValueContext.Provider>
-    </CounterActionContext.Provider>
+    <ItemGroupContext.Provider value={value}>
+      {children}
+    </ItemGroupContext.Provider>
   );
 }
 
-export function useCounterValue() {
-  const value = useContext(CounterValueContext);
+export function useItemGroup() {
+  const value = useContext(ItemGroupContext);
   if (value === undefined) {
-    throw new Error(
-      "useCounterValue should be used within CounterValueContext.Provider"
-    );
-  }
-  return value;
-}
-
-export function useCounterActions() {
-  const value = useContext(CounterActionContext);
-  if (value === undefined) {
-    throw new Error(
-      "useCounterActions should be used within CounterActionsContext.Provider"
-    );
+    throw new Error("useItemGroup");
   }
   return value;
 }
 
 function App() {
+  const [currentId, setCurrentId] = useState(1);
   return (
-    <CounterProvider>
-      <div>
-        <Value />
-        <Button />
-      </div>
-    </CounterProvider>
+    <div>
+      <ItemGroup currentId={currentId} onSelect={setCurrentId}>
+        <Item id={1}>1</Item>
+        <Item id={2}>2</Item>
+        <Item id={3}>3</Item>
+      </ItemGroup>
+    </div>
   );
 }
 
