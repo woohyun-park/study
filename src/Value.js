@@ -1,7 +1,7 @@
-import { useMyContext } from "./App";
+import { useCounterValue } from "./App";
 
 const Value = () => {
-  const [value] = useMyContext();
+  const value = useCounterValue();
   return <div>{value}</div>;
 };
 

@@ -2,9 +2,10 @@ import { createContext, useContext, useMemo, useState } from "react";
 import Value from "./Value";
 import Button from "./Button";
 
-const MyContext = createContext();
+const CounterValueContext = createContext();
+const CounterActionContext = createContext();
 
-function MyContextProvider({ children }) {
+function CounterProvider({ children }) {
   const [counter, setCounter] = useState(1);
   const actions = useMemo(
     () => ({
@@ -15,28 +16,45 @@ function MyContextProvider({ children }) {
         setCounter((prev) => prev - 1);
       },
     }),
-    [[]]
+    []
   );
-  const value = useMemo(() => [counter, actions], [counter, actions]);
-  return <MyContext.Provider value={value}>{children}</MyContext.Provider>;
+  return (
+    <CounterActionContext.Provider value={actions}>
+      <CounterValueContext.Provider value={counter}>
+        {children}
+      </CounterValueContext.Provider>
+    </CounterActionContext.Provider>
+  );
 }
 
-export function useMyContext() {
-  const value = useContext(MyContext);
+export function useCounterValue() {
+  const value = useContext(CounterValueContext);
   if (value === undefined) {
-    throw new Error("useMyContext should be used within MyContext.Provider");
+    throw new Error(
+      "useCounterValue should be used within CounterValueContext.Provider"
+    );
+  }
+  return value;
+}
+
+export function useCounterActions() {
+  const value = useContext(CounterActionContext);
+  if (value === undefined) {
+    throw new Error(
+      "useCounterActions should be used within CounterActionsContext.Provider"
+    );
   }
   return value;
 }
 
 function App() {
   return (
-    <MyContextProvider>
+    <CounterProvider>
       <div>
         <Value />
         <Button />
       </div>
-    </MyContextProvider>
+    </CounterProvider>
   );
 }
 

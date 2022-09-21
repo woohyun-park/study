@@ -1,7 +1,7 @@
-import { useMyContext } from "./App";
+import { useCounterActions } from "./App";
 
 const Button = () => {
-  const [, actions] = useMyContext();
+  const actions = useCounterActions();
   return (
     <>
       <div onClick={actions.increase}>+</div>
