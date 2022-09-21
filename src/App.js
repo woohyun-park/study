@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// import { createContext, useContext } from 'react';
+// import One from './One';
+// export const MyContext = createContext();
+
+// export function useMyContext() {
+//   return useContext(MyContext);
+// }
+
+// function App() {
+//   return (
+//     <MyContext.Provider value="Hello World">
+//       <One />
+//     </MyContext.Provider>
+//   );
+// }
+
+// export default App;
+
+import UseInput from "./UseInput";
 
 function App() {
+  const [text, setText] = UseInput({
+    email: "",
+    password: "",
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <input id="email" value={text.email} onChange={setText} />
+      <input id="password" value={text.password} onChange={setText} />
+    </>
   );
 }
 
