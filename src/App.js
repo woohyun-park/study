@@ -3,30 +3,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 function App() {
-  const [isVisible, setIsVisible] = useState(false);
-  const onClick = () => {
-    setIsVisible(!isVisible);
+  const variants = {
+    inView: {
+      opacity: 1,
+      rotate: [0, 360],
+      borderRadius: ["20%", "50%"],
+      transition: { delay: 0.05 },
+    },
   };
   return (
     <>
-      <div>
-        <button onClick={onClick}>Show</button>
-        <button onClick={onClick}>Hide</button>
-      </div>
+      <div className="space"></div>
       <AnimatePresence>
-        {isVisible && (
-          <motion.div
-            className="box"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.5,
-              ease: [0, 0.71, 0.2, 1.01],
-            }}
-          />
-        )}
+        <motion.div
+          className="box"
+          initial={{ opacity: 0.2 }}
+          whileInView="inView"
+          whileHover={{
+            scale: 1.2,
+            transition: { type: "spring", stiffness: 400, damping: 10 },
+          }}
+          variants={variants}
+        />
       </AnimatePresence>
     </>
   );
