@@ -1,35 +1,34 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import Item from "./Item";
-
-const ItemGroupContext = createContext();
-
-function ItemGroup({ children, currentId, onSelect }) {
-  const value = useMemo(() => ({ currentId, onSelect }), [currentId, onSelect]);
-  return (
-    <ItemGroupContext.Provider value={value}>
-      {children}
-    </ItemGroupContext.Provider>
-  );
-}
-
-export function useItemGroup() {
-  const value = useContext(ItemGroupContext);
-  if (value === undefined) {
-    throw new Error("useItemGroup");
-  }
-  return value;
-}
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import "./App.css";
 
 function App() {
-  const [currentId, setCurrentId] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const onClick = () => {
+    setIsVisible(!isVisible);
+  };
   return (
-    <div>
-      <ItemGroup currentId={currentId} onSelect={setCurrentId}>
-        <Item id={1}>1</Item>
-        <Item id={2}>2</Item>
-        <Item id={3}>3</Item>
-      </ItemGroup>
-    </div>
+    <>
+      <div>
+        <button onClick={onClick}>Show</button>
+        <button onClick={onClick}>Hide</button>
+      </div>
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            className="box"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.5,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
