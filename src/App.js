@@ -1,33 +1,42 @@
+import "./styles.css";
 import { useState } from "react";
+import { initialTabs as tabs } from "./ingredients";
 import { motion, AnimatePresence } from "framer-motion";
-import "./App.css";
 
-function App() {
-  const variants = {
-    inView: {
-      opacity: 1,
-      rotate: [0, 360],
-      borderRadius: ["20%", "50%"],
-      transition: { delay: 0.05 },
-    },
-  };
+export default function App() {
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+
   return (
-    <>
-      <div className="space"></div>
-      <AnimatePresence>
-        <motion.div
-          className="box"
-          initial={{ opacity: 0.2 }}
-          whileInView="inView"
-          whileHover={{
-            scale: 1.2,
-            transition: { type: "spring", stiffness: 400, damping: 10 },
-          }}
-          variants={variants}
-        />
-      </AnimatePresence>
-    </>
+    <div className="window">
+      <nav>
+        <ul>
+          {tabs.map((item) => (
+            <li
+              key={item.label}
+              className={item === selectedTab ? "selected" : ""}
+              onClick={() => setSelectedTab(item)}
+            >
+              {`${item.icon} ${item.label}`}
+              {item === selectedTab ? (
+                <motion.div className="underline" layoutId="underline" />
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <main>
+        <AnimatePresence exitBeforeEnter>
+          <motion.div
+            key={selectedTab ? selectedTab.label : "empty"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {selectedTab ? selectedTab.icon : "😋"}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+    </div>
   );
 }
-
-export default App;
